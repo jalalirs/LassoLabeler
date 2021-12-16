@@ -1,0 +1,10 @@
+{
+    "dynamic_params": [],
+    "static_params": [],
+    "grid_params": [],
+    "well_params": [],
+    "wells": [],
+    "field_params": [],
+    "convert_corners": false,
+    "name": "test"
+}

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LassoLabeler</class>
+ <widget class="QMainWindow" name="LassoLabeler">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1222</width>
+    <height>857</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Lasso Labeler</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <pointsize>18</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>List of Labels</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="ln_search_key"/>
+       </item>
+       <item>
+        <widget class="QListWidget" name="ls_keys">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_2" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QTabWidget" name="boundingbox">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="image_widget">
+          <attribute name="title">
+           <string>Image</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="image_layout">
+           <property name="leftMargin">
+            <number>4</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
+            <number>4</number>
+           </property>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="mask_widget">
+          <attribute name="title">
+           <string>Mask</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="mask_layout"/>
+         </widget>
+         <widget class="QWidget" name="boundingbox_widget">
+          <attribute name="title">
+           <string>Bounding Box</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="boundingbox_layout"/>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_3" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <pointsize>18</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>Images</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="ls_images">
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="layoutMode">
+          <enum>QListView::Batched</enum>
+         </property>
+         <property name="batchSize">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <pointsize>18</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>Objects</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="ls_objects">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="layoutMode">
+          <enum>QListView::Batched</enum>
+         </property>
+         <property name="batchSize">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="font">
+          <font>
+           <family>Sans Serif</family>
+           <pointsize>18</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
+           <kerning>true</kerning>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
+         </property>
+         <property name="text">
+          <string>Contours</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
+         <property name="indent">
+          <number>-1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="ls_contours">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:white</string>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="layoutMode">
+          <enum>QListView::Batched</enum>
+         </property>
+         <property name="batchSize">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1222</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="mn_load_dataset"/>
+    <addaction name="mn_save_automatically"/>
+    <addaction name="mn_save_boundingbox"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="mn_load_dataset">
+   <property name="text">
+    <string>Load Dataset</string>
+   </property>
+   <property name="autoRepeat">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="mn_save_automatically">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save Automatically</string>
+   </property>
+  </action>
+  <action name="mn_save_boundingbox">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save Bounding Box</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
