@@ -439,7 +439,6 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
             self.ls_objects.addItem(o)
 
     def keyPressEvent(self, e):
-        print(e.key()  == QtCore.Qt.Key_S,e.key(),QtCore.Qt.Key_S)
         if e.key()  == QtCore.Qt.Key_Right:
             if not self.dataset.isVideoOpen(self.currentVideo):
                 return
