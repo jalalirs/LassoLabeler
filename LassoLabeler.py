@@ -88,6 +88,7 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         self.storeBoundingBox = False
         self.keysWidget = {}
         self.applyStyle()
+        self.currentVideo = None
 
     def applyStyle(self):
         os.chdir(DIR + '/style')
@@ -110,6 +111,8 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
             cbo.view().verticalScrollBar().setProperty('css',True)
 
         self.setStyleSheet(open('seepro.css').read())
+       
+        self.video_widget.setStyleSheet("QWidget#video_widget {border: 1px solid black;}")
 
         os.chdir(DIR)
 
@@ -118,6 +121,12 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         self.ls_images.clear()
         self.ls_contours.clear()
         self.ls_objects.clear()
+        self.ls_videos.clear()
+        self.pb_open_video.setEnabled(False)
+        self.pb_close_video.setEnabled(False)
+        self.pb_next.setEnabled(False)
+        self.pb_previous.setEnabled(False)
+        self.lbl_frame.setText("")
 
         for k in self.dataset.keys():
             
@@ -138,6 +147,9 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         for name in self.dataset.itemNames():
             self.ls_images.addItem(name)
         
+        for video in self.dataset.videos():
+            self.ls_videos.addItem(video)
+    
         self.ls_images.setCurrentRow(0)
     
     def update_image(self):
@@ -153,7 +165,24 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         self._boundingboxWidget.clear()
         self._boundingboxWidget.updateImage(boundingboxImage)
 
-
+    def update_video_state(self):
+        if not self.dataset.isVideoOpen(self.currentVideo):
+            self.lbl_frame.setText("")
+            self.pb_next.setEnabled(False)
+            self.pb_previous.setEnabled(False)
+        else:
+            videoFrame = self.dataset.currentVideoFrame(self.currentVideo)
+            videoLength = self.dataset.videoLength(self.currentVideo)
+            self.lbl_frame.setText(f"{videoFrame}/{videoLength}")
+            if videoFrame == 0:
+                self.pb_previous.setEnabled(False)
+            else:
+                self.pb_previous.setEnabled(True)
+            if videoFrame == videoLength - 1:
+                self.pb_next.setEnabled(False)
+            else:
+                self.pb_next.setEnabled(True)
+    
     def on_lasso_finished(self,points):
         objectId = self.ls_objects.currentItem().text()
         label = "_".join(objectId.split("_")[:-1])
@@ -222,7 +251,7 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         currentObject = current.text()
         self.ls_contours.clear()
     
-        for i in range(self.dataset.shapesForObject(currentObject)):
+        for i in range(self.dataset.shapesForObject(currentObject,"polygon")):
             x1,y1,x2,y2 = self.dataset.getContourBoundingBox(currentObject,i)
             self.ls_contours.addItem(f'{x1},{y1} {x2},{y2}')
     
@@ -233,12 +262,28 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         currentContour = self.ls_contours.currentRow()
         currentObject = self.ls_objects.currentItem().text()
         # to prevent instant update after item is removed
-        if currentContour > self.dataset.shapesForObject(currentObject) - 1:
+        if currentContour > self.dataset.shapesForObject(currentObject,"polygon") - 1:
             return
         
         self.dataset.fillInContour(currentObject,currentContour)
         self.update_image()
-             
+
+    @QtCore.pyqtSlot(QListWidgetItem,QListWidgetItem)
+    def on_ls_videos_currentItemChanged(self,current,previous):
+        if current is None:
+            return
+        currentVideo = self.ls_videos.currentItem().text()
+        
+        if self.dataset.isVideoOpen(currentVideo):
+            self.pb_open_video.setEnabled(False)
+            self.pb_close_video.setEnabled(True)
+        else:
+            self.pb_open_video.setEnabled(True)
+            self.pb_close_video.setEnabled(False)
+        
+        self.currentVideo = currentVideo
+        self.update_video_state()
+
     @QtCore.pyqtSlot()
     def on_mn_load_dataset_triggered(self):
         folder = str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory"))
@@ -298,6 +343,115 @@ class LassoLabeler(QLassoLabeler, Ui_LassoLabeler):
         if self.mn_save_automatically.isChecked():
             self.dataset.save(self.mn_save_boundingbox.isChecked())
 
+    def on_pb_goto_released(self):
+        try:
+            goto = int(self.ln_goto.text())
+        except:
+            notify("Bad go to value.","error")
+            return
+        ret,frame = self.dataset.videoGoto(self.currentVideo,goto)
+        if ret:
+            self._actualImageWidget.clear()
+            self._actualImageWidget.updateImage(frame)
+            self._maskWidget.clear()
+            self._boundingboxWidget.clear()
+            self.update_video_state()
+
+    def on_pb_next_released(self):
+        try:
+            jump = int(self.ln_jump.text())
+        except:
+            jump = 1
+        ret,frame = self.dataset.videoNext(self.currentVideo,jump)
+        if ret:
+            self._actualImageWidget.clear()
+            self._actualImageWidget.updateImage(frame)
+            self._maskWidget.clear()
+            self._boundingboxWidget.clear()
+            self.update_video_state()
+         
+    def on_pb_previous_released(self):
+        try:
+            jump = int(self.ln_jump.text())
+        except:
+            jump = 1
+        ret,frame = self.dataset.videoPrev(self.currentVideo,jump)
+        if ret:
+            self._actualImageWidget.clear()
+            self._actualImageWidget.updateImage(frame)
+            self._maskWidget.clear()
+            self._boundingboxWidget.clear()
+            self.update_video_state()
+    
+    def on_pb_open_video_released(self):
+        opened = self.dataset.openVideo(self.currentVideo)
+        if opened:
+            self.pb_open_video.setEnabled(False)
+            self.pb_close_video.setEnabled(True)
+            self.pb_sample.setEnabled(True)
+            
+            ret,frame = self.dataset.videoCurrent(self.currentVideo)
+            if ret:
+                self._actualImageWidget.clear()
+                self._actualImageWidget.updateImage(frame)
+                self._maskWidget.clear()
+                self._boundingboxWidget.clear()
+                self.update_video_state()
+        else:
+            self.pb_sample.setEnabled(False)
+            self.pb_open_video.setEnabled(True)
+            self.pb_close_video.setEnabled(False)
+        
+    def on_pb_close_video_released(self):
+        closed = self.dataset.closeVideo(self.currentVideo)
+        if closed:
+            self.pb_open_video.setEnabled(True)
+            self.pb_close_video.setEnabled(False)
+            self.pb_sample.setEnabled(False)
+            self.update_video_state()
+        else:
+            self.pb_sample.setEnabled(True)
+            self.pb_open_video.setEnabled(False)
+            self.pb_close_video.setEnabled(True)
+
+    def on_pb_sample_released(self):
+        currentVideo = self.currentVideo
+        ret,frameName,frameId = self.dataset.sampleFrame(currentVideo)
+
+        if not ret:
+            return
+
+        if frameId >= self.ls_images.count() - 1:
+            self.ls_images.addItem(frameName)
+
+        self.ls_images.setCurrentRow(frameId)
+
+        # changing the image
+        self.dataset.changeItem(frameName,False)
+        self.update_image()
+
+        # clearing lists
+        self.ls_contours.clear()
+        self.ls_objects.clear()
+
+        # populating objects
+        for o in self.dataset.objectNames():
+            self.ls_objects.addItem(o)
+
+    def keyPressEvent(self, e):
+        print(e.key()  == QtCore.Qt.Key_S,e.key(),QtCore.Qt.Key_S)
+        if e.key()  == QtCore.Qt.Key_Right:
+            if not self.dataset.isVideoOpen(self.currentVideo):
+                return
+            self.on_pb_next_released()
+        elif e.key()  == QtCore.Qt.Key_Left:
+            if not self.dataset.isVideoOpen(self.currentVideo):
+                return
+            self.on_pb_previous_released()
+        elif e.key()  == QtCore.Qt.Key_S:
+            if not self.dataset.isVideoOpen(self.currentVideo):
+                return
+            self.on_pb_sample_released()
 
 if __name__ == '__main__':
 	app = QtWidgets.QApplication(sys.argv)

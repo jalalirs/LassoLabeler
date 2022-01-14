@@ -7,6 +7,8 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 from matplotlib.widgets import LassoSelector
 from matplotlib.path import Path
+import time
+
 
 
 class LassoWidget(FigureCanvas):
@@ -42,6 +44,7 @@ class LassoWidget(FigureCanvas):
         self.verts = None
 
     def updateImage(self,image):
+        self._ax.clear()
         self._ax.imshow(image)
-        self.draw()
-        self.flush_events()
+        self.fig.canvas.draw()
+        #self.flush_events()
